@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 18, 2023 at 02:55 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 7.4.33
+-- Generation Time: Aug 28, 2023 at 10:09 PM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 7.4.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mellymanchies`
+-- Database: `mellymunchies`
 --
 
 -- --------------------------------------------------------
@@ -29,19 +29,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `brands` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `slug` varchar(191) NOT NULL,
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `brands`
---
-
-INSERT INTO `brands` (`id`, `slug`, `created_at`, `updated_at`) VALUES
-(1, 'demo', '2023-08-16 17:45:40', '2023-08-16 17:45:40'),
-(2, 'my-demo', '2023-08-16 17:47:16', '2023-08-16 17:47:16'),
-(3, 'clothes', '2023-08-16 23:39:58', '2023-08-16 23:39:58');
 
 -- --------------------------------------------------------
 
@@ -52,20 +43,11 @@ INSERT INTO `brands` (`id`, `slug`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `brands_translation` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `brand_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp()
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `brands_translation`
---
-
-INSERT INTO `brands_translation` (`id`, `brand_id`, `locale`, `name`, `created_at`, `updated_at`) VALUES
-(1, 1, 'English', 'demo', '2023-08-16 17:45:40', '2023-08-16 17:45:40'),
-(2, 2, 'English', 'my demo', '2023-08-16 17:47:16', '2023-08-16 17:47:16'),
-(3, 3, 'English', 'clothes', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -75,8 +57,9 @@ INSERT INTO `brands_translation` (`id`, `brand_id`, `locale`, `name`, `created_a
 
 CREATE TABLE `category` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `slug` varchar(191) NOT NULL,
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `parent_id` bigint(20) DEFAULT NULL,
+  `is_gift` int(11) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -85,13 +68,14 @@ CREATE TABLE `category` (
 -- Dumping data for table `category`
 --
 
-INSERT INTO `category` (`id`, `slug`, `parent_id`, `created_at`, `updated_at`) VALUES
-(32, 'demo-category-2', NULL, '2023-06-15 22:37:19', '2023-06-15 22:38:59'),
-(33, 'demo-category-1', NULL, '2023-06-15 22:37:49', '2023-06-15 22:38:47'),
-(34, 'demo-category-3', NULL, '2023-06-15 22:38:26', '2023-06-15 22:39:09'),
-(35, 'demo-category-4', NULL, '2023-06-15 22:39:30', '2023-06-15 22:39:30'),
-(36, 'demo-category-5', NULL, '2023-06-15 22:39:55', '2023-06-15 22:39:55'),
-(38, 'clothes', NULL, '2023-08-16 23:26:07', '2023-08-16 23:26:07');
+INSERT INTO `category` (`id`, `slug`, `parent_id`, `is_gift`, `created_at`, `updated_at`) VALUES
+(32, 'demo-category-2', NULL, 0, '2023-06-15 22:37:19', '2023-06-15 22:38:59'),
+(33, 'demo-category-1', NULL, 0, '2023-06-15 22:37:49', '2023-06-15 22:38:47'),
+(34, 'demo-category-3', NULL, 0, '2023-06-15 22:38:26', '2023-06-15 22:39:09'),
+(35, 'demo-category-4', NULL, 0, '2023-06-15 22:39:30', '2023-06-15 22:39:30'),
+(36, 'demo-category-5', NULL, 0, '2023-06-15 22:39:55', '2023-06-15 22:39:55'),
+(37, 'gift-category', NULL, 1, '2023-08-25 17:36:08', '2023-08-25 17:36:08'),
+(38, 'demo-category', 33, 0, '2023-08-25 17:52:07', '2023-08-25 17:52:07');
 
 -- --------------------------------------------------------
 
@@ -102,11 +86,11 @@ INSERT INTO `category` (`id`, `slug`, `parent_id`, `created_at`, `updated_at`) V
 CREATE TABLE `category_translation` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `category_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp()
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -119,7 +103,8 @@ INSERT INTO `category_translation` (`id`, `category_id`, `locale`, `name`, `desc
 (34, 34, 'English', 'Demo Category 3', NULL, '2023-06-15 22:38:26', '2023-06-15 22:39:10'),
 (35, 35, 'English', 'Demo Category 4', NULL, '2023-06-15 22:39:30', '2023-06-15 22:39:30'),
 (36, 36, 'English', 'Demo Category 5', NULL, '2023-06-15 22:39:55', '2023-06-15 22:39:55'),
-(37, 38, 'English', 'clothes', 'this  is category description', NULL, NULL);
+(37, 37, 'English', 'Gift Category', NULL, '2023-08-25 17:36:08', '2023-08-25 17:36:08'),
+(38, 38, 'English', 'Demo category', 'category', '2023-08-25 17:52:07', '2023-08-25 17:52:07');
 
 -- --------------------------------------------------------
 
@@ -129,7 +114,7 @@ INSERT INTO `category_translation` (`id`, `category_id`, `locale`, `name`, `desc
 
 CREATE TABLE `coupons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(191) NOT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` decimal(10,2) UNSIGNED DEFAULT NULL,
   `is_percent` tinyint(1) NOT NULL,
   `free_shipping` tinyint(1) NOT NULL,
@@ -178,8 +163,8 @@ CREATE TABLE `coupon_products` (
 CREATE TABLE `coupon_translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `coupon_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -190,7 +175,7 @@ CREATE TABLE `coupon_translations` (
 
 CREATE TABLE `currency` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(3) NOT NULL,
+  `name` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
   `base_currency` tinyint(4) NOT NULL,
   `exchange_rate` decimal(10,6) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
@@ -216,12 +201,12 @@ INSERT INTO `currency` (`id`, `name`, `base_currency`, `exchange_rate`, `status`
 CREATE TABLE `customer_addresses` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `country` varchar(30) NOT NULL,
-  `state` varchar(50) NOT NULL,
-  `city` varchar(191) NOT NULL,
-  `address` text NOT NULL,
-  `post_code` varchar(50) NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `country` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `state` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `city` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `post_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_default` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -242,7 +227,7 @@ INSERT INTO `customer_addresses` (`id`, `customer_id`, `name`, `country`, `state
 
 CREATE TABLE `database_backups` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `file` varchar(191) NOT NULL,
+  `file` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -256,9 +241,9 @@ CREATE TABLE `database_backups` (
 
 CREATE TABLE `email_templates` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `subject` text NOT NULL,
-  `body` longtext NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -285,9 +270,9 @@ INSERT INTO `email_templates` (`id`, `name`, `subject`, `body`, `created_at`, `u
 CREATE TABLE `entity_files` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `media_id` bigint(20) UNSIGNED NOT NULL,
-  `entity_type` varchar(191) NOT NULL,
+  `entity_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `entity_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -321,17 +306,20 @@ INSERT INTO `entity_files` (`id`, `media_id`, `entity_type`, `entity_id`, `name`
 (60, 3, 'App\\Entity\\Product\\Product', 1, 'gallery_images', '2023-06-27 16:57:55', '2023-06-27 16:57:55'),
 (61, 2, 'App\\Entity\\Product\\Product', 1, 'gallery_images', '2023-06-27 16:57:55', '2023-06-27 16:57:55'),
 (62, 4, 'App\\Entity\\Product\\Product', 1, 'gallery_images', '2023-06-27 16:57:55', '2023-06-27 16:57:55'),
-(84, 4, 'App\\Entity\\Brand\\Brand', 1, 'logo', '2023-08-16 17:45:40', '2023-08-16 17:45:40'),
-(85, 3, 'App\\Entity\\Brand\\Brand', 1, 'banner', '2023-08-16 17:45:40', '2023-08-16 17:45:40'),
-(86, 4, 'App\\Entity\\Product\\Product', 7, 'product_image', '2023-08-16 17:46:14', '2023-08-16 17:46:14'),
-(87, 4, 'App\\Entity\\Product\\Product', 7, 'gallery_images', '2023-08-16 17:46:14', '2023-08-16 17:46:14'),
-(88, 3, 'App\\Entity\\Brand\\Brand', 2, 'logo', '2023-08-16 17:47:16', '2023-08-16 17:47:16'),
-(89, 3, 'App\\Entity\\Brand\\Brand', 2, 'banner', '2023-08-16 17:47:16', '2023-08-16 17:47:16'),
-(90, 4, 'App\\Entity\\Product\\Product', 13, 'product_image', '2023-08-16 21:41:51', '2023-08-16 21:41:51'),
-(91, 1, 'App\\Entity\\Product\\Product', 13, 'gallery_images', '2023-08-16 21:41:51', '2023-08-16 21:41:51'),
-(92, 2, 'App\\Entity\\Product\\Product', 13, 'gallery_images', '2023-08-16 21:41:51', '2023-08-16 21:41:51'),
-(93, 21, 'App\\Entity\\Product\\Product', 16, 'product_image', '2023-08-17 23:36:30', '2023-08-17 23:36:30'),
-(94, 21, 'App\\Entity\\Product\\Product', 16, 'gallery_images', '2023-08-17 23:36:30', '2023-08-17 23:36:30');
+(84, 4, 'App\\Entity\\Product\\Product', 7, 'product_image', '2023-08-24 19:10:26', '2023-08-24 19:10:26'),
+(85, 3, 'App\\Entity\\Product\\Product', 7, 'gallery_images', '2023-08-24 19:10:26', '2023-08-24 19:10:26'),
+(86, 4, 'App\\Entity\\Product\\Product', 7, 'gallery_images', '2023-08-24 19:10:26', '2023-08-24 19:10:26'),
+(87, 1, 'App\\Entity\\Product\\Product', 4, 'product_image', '2023-08-24 21:35:35', '2023-08-24 21:35:35'),
+(88, 1, 'App\\Entity\\Product\\Product', 4, 'gallery_images', '2023-08-24 21:35:35', '2023-08-24 21:35:35'),
+(89, 2, 'App\\Entity\\Product\\Product', 4, 'gallery_images', '2023-08-24 21:35:35', '2023-08-24 21:35:35'),
+(90, 3, 'App\\Entity\\Product\\Product', 4, 'gallery_images', '2023-08-24 21:35:35', '2023-08-24 21:35:35'),
+(91, 4, 'App\\Entity\\Product\\Product', 8, 'product_image', '2023-08-25 16:59:30', '2023-08-25 16:59:30'),
+(92, 4, 'App\\Entity\\Product\\Product', 8, 'gallery_images', '2023-08-25 16:59:30', '2023-08-25 16:59:30'),
+(93, 3, 'App\\Entity\\Product\\Product', 8, 'gallery_images', '2023-08-25 16:59:30', '2023-08-25 16:59:30'),
+(94, 4, 'App\\Entity\\Category\\Category', 37, 'logo', '2023-08-25 17:36:08', '2023-08-25 17:36:08'),
+(95, 4, 'App\\Entity\\Category\\Category', 37, 'banner', '2023-08-25 17:36:08', '2023-08-25 17:36:08'),
+(96, 4, 'App\\Entity\\Category\\Category', 38, 'logo', '2023-08-25 17:52:07', '2023-08-25 17:52:07'),
+(97, 3, 'App\\Entity\\Category\\Category', 38, 'banner', '2023-08-25 17:52:07', '2023-08-25 17:52:07');
 
 -- --------------------------------------------------------
 
@@ -341,10 +329,10 @@ INSERT INTO `entity_files` (`id`, `media_id`, `entity_type`, `entity_id`, `name`
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -356,11 +344,11 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `media` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `filename` varchar(191) NOT NULL,
-  `file_path` varchar(191) NOT NULL,
-  `file_type` varchar(191) NOT NULL,
-  `file_size` varchar(191) NOT NULL,
-  `file_extension` varchar(191) NOT NULL,
+  `filename` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_path` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_size` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_extension` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -374,9 +362,7 @@ INSERT INTO `media` (`id`, `filename`, `file_path`, `file_type`, `file_size`, `f
 (1, 'product-img01.png', 'media/KYOjs5P2fAtILz1V8hgxGnYQUDBY8Kx8NvbfWxSn.png', 'image/png', '148221', 'png', 1, '2023-05-23 23:49:07', '2023-05-23 23:49:07'),
 (2, 'product-img03.png', 'media/r784pHHMqGtWwjAC8QJDQqmHfPjepltLrQvYBagl.png', 'image/png', '132476', 'png', 1, '2023-06-15 22:37:06', '2023-06-15 22:37:06'),
 (3, 'product-img02.png', 'media/0xxET0prK5srGipsvrXvTPIHWQAOZru4zdonIrbr.png', 'image/png', '202232', 'png', 1, '2023-06-15 22:37:08', '2023-06-15 22:37:08'),
-(4, 'product-img01.png', 'media/zqB9mHdiHe9sceS8d5BeSRqbpQjwwYp8KRLcX2x1.png', 'image/png', '148221', 'png', 1, '2023-06-15 22:37:08', '2023-06-15 22:37:08'),
-(21, 'dihexa10mg.jpg', 'media/168e5dc7d96840f0fa08a1523821842c1781bc536a8f51304446a428fa6ee1bf.jpg', 'image/jpeg', '75301', 'jpg', 1, '2023-08-17 23:25:37', '2023-08-17 23:25:37'),
-(22, 'dihexa10mg.jpg', 'media/168e5dc7d96840f0fa08a1523821842c1781bc536a8f51304446a428fa6ee1bf.jpg', 'image/jpeg', '75301', 'jpg', 1, '2023-08-18 00:50:52', '2023-08-18 00:50:52');
+(4, 'product-img01.png', 'media/zqB9mHdiHe9sceS8d5BeSRqbpQjwwYp8KRLcX2x1.png', 'image/png', '148221', 'png', 1, '2023-06-15 22:37:08', '2023-06-15 22:37:08');
 
 -- --------------------------------------------------------
 
@@ -386,7 +372,7 @@ INSERT INTO `media` (`id`, `filename`, `file_path`, `file_type`, `file_size`, `f
 
 CREATE TABLE `meta_data` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `entity_type` varchar(191) NOT NULL,
+  `entity_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `entity_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -400,16 +386,9 @@ INSERT INTO `meta_data` (`id`, `entity_type`, `entity_id`, `created_at`, `update
 (1, 'App\\Entity\\Product\\Product', 1, '2023-05-23 23:55:04', '2023-05-23 23:55:04'),
 (2, 'App\\Entity\\Product\\Product', 2, '2023-05-23 23:55:48', '2023-05-23 23:55:48'),
 (3, 'App\\Entity\\Product\\Product', 3, '2023-05-23 23:56:21', '2023-05-23 23:56:21'),
-(7, 'App\\Entity\\Product\\Product', 7, '2023-08-16 17:46:14', '2023-08-16 17:46:14'),
-(8, 'App\\Entity\\Product\\Product', 8, '2023-08-16 18:27:31', '2023-08-16 18:27:31'),
-(9, 'App\\Entity\\Product\\Product', 9, '2023-08-16 18:38:54', '2023-08-16 18:38:54'),
-(10, 'App\\Entity\\Product\\Product', 10, '2023-08-16 18:40:07', '2023-08-16 18:40:07'),
-(11, 'App\\Entity\\Product\\Product', 11, '2023-08-16 21:01:21', '2023-08-16 21:01:21'),
-(12, 'App\\Entity\\Product\\Product', 12, '2023-08-16 21:19:49', '2023-08-16 21:19:49'),
-(13, 'App\\Entity\\Product\\Product', 13, '2023-08-16 21:27:32', '2023-08-16 21:27:32'),
-(14, 'App\\Entity\\Product\\Product', 14, '2023-08-16 22:15:51', '2023-08-16 22:15:51'),
-(15, 'App\\Entity\\Product\\Product', 15, '2023-08-16 22:25:44', '2023-08-16 22:25:44'),
-(16, 'App\\Entity\\Product\\Product', 16, '2023-08-17 23:36:30', '2023-08-17 23:36:30');
+(4, 'App\\Entity\\Product\\Product', 4, '2023-05-23 23:56:58', '2023-05-23 23:56:58'),
+(7, 'App\\Entity\\Product\\Product', 7, '2023-08-24 19:10:26', '2023-08-24 19:10:26'),
+(8, 'App\\Entity\\Product\\Product', 8, '2023-08-25 16:59:30', '2023-08-25 16:59:30');
 
 -- --------------------------------------------------------
 
@@ -420,10 +399,10 @@ INSERT INTO `meta_data` (`id`, `entity_type`, `entity_id`, `created_at`, `update
 CREATE TABLE `meta_data_translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `meta_data_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `meta_title` varchar(191) DEFAULT NULL,
-  `meta_keywords` text DEFAULT NULL,
-  `meta_description` text DEFAULT NULL
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `meta_title` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_keywords` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -434,16 +413,9 @@ INSERT INTO `meta_data_translations` (`id`, `meta_data_id`, `locale`, `meta_titl
 (1, 1, 'English', NULL, NULL, NULL),
 (2, 2, 'English', NULL, NULL, NULL),
 (3, 3, 'English', NULL, NULL, NULL),
+(4, 4, 'English', NULL, NULL, NULL),
 (7, 7, 'English', NULL, NULL, NULL),
-(8, 8, 'English', '', '', ''),
-(9, 9, 'English', '', '', ''),
-(10, 10, 'English', '', '', ''),
-(11, 11, 'English', '', '', ''),
-(12, 12, 'English', '', '', ''),
-(13, 13, 'English', NULL, NULL, NULL),
-(14, 14, 'English', '', '', ''),
-(15, 15, 'English', '', '', ''),
-(16, 16, 'English', NULL, NULL, NULL);
+(8, 8, 'English', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -453,7 +425,7 @@ INSERT INTO `meta_data_translations` (`id`, `meta_data_id`, `locale`, `meta_titl
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(191) NOT NULL,
+  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -521,7 +493,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `navigations` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -546,17 +518,17 @@ INSERT INTO `navigations` (`id`, `name`, `status`, `created_at`, `updated_at`) V
 CREATE TABLE `navigation_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `navigation_id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(20) NOT NULL,
+  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `page_id` bigint(20) UNSIGNED DEFAULT NULL,
   `category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `url` varchar(191) DEFAULT NULL,
-  `icon` varchar(191) DEFAULT NULL,
-  `target` varchar(191) NOT NULL,
+  `url` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `icon` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
   `position` int(10) UNSIGNED DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
-  `css_class` varchar(191) DEFAULT NULL,
-  `css_id` varchar(191) DEFAULT NULL,
+  `css_class` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `css_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -590,8 +562,8 @@ INSERT INTO `navigation_items` (`id`, `navigation_id`, `type`, `page_id`, `categ
 CREATE TABLE `navigation_item_translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `navigation_item_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -625,33 +597,33 @@ INSERT INTO `navigation_item_translations` (`id`, `navigation_item_id`, `locale`
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) DEFAULT NULL,
-  `customer_name` varchar(191) NOT NULL,
-  `customer_email` varchar(191) NOT NULL,
-  `customer_phone` varchar(191) NOT NULL,
-  `billing_name` varchar(191) NOT NULL,
-  `billing_city` varchar(191) DEFAULT NULL,
-  `billing_state` varchar(191) NOT NULL,
-  `billing_post_code` varchar(191) NOT NULL,
-  `billing_country` varchar(191) NOT NULL,
-  `billing_address` text NOT NULL,
-  `shipping_name` varchar(191) NOT NULL,
-  `shipping_city` varchar(191) DEFAULT NULL,
-  `shipping_state` varchar(191) NOT NULL,
-  `shipping_post_code` varchar(191) NOT NULL,
-  `shipping_country` varchar(191) NOT NULL,
-  `shipping_address` text NOT NULL,
+  `customer_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `billing_state` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_post_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_country` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `billing_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shipping_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shipping_city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shipping_state` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shipping_post_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shipping_country` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shipping_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `sub_total` decimal(10,2) UNSIGNED NOT NULL,
-  `shipping_method` varchar(191) NOT NULL,
+  `shipping_method` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `shipping_cost` decimal(10,2) UNSIGNED NOT NULL,
   `coupon_id` bigint(20) DEFAULT NULL,
   `discount` decimal(10,2) UNSIGNED NOT NULL,
   `total` decimal(10,2) UNSIGNED NOT NULL,
-  `payment_method` varchar(191) DEFAULT NULL,
-  `currency` varchar(191) NOT NULL,
+  `payment_method` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `currency_rate` decimal(10,2) DEFAULT NULL,
-  `locale` varchar(191) NOT NULL,
-  `status` varchar(30) NOT NULL,
-  `note` text DEFAULT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -675,7 +647,8 @@ INSERT INTO `orders` (`id`, `customer_id`, `customer_name`, `customer_email`, `c
 (16, 1, 'admin', 'admin@gmail.com', '253356356', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', '45.00', 'free', '0.00', NULL, '0.00', '45.00', 'Cash_On_Delivery', 'USD', NULL, 'English', 'pending', NULL, '2023-07-03 17:32:52', '2023-07-03 17:41:14'),
 (17, 1, 'admin', 'admin@gmail.com', '253356356', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', '45.00', 'free', '0.00', NULL, '0.00', '45.00', 'Cash_On_Delivery', 'USD', NULL, 'English', 'pending', NULL, '2023-07-03 17:45:13', '2023-07-03 17:45:19'),
 (18, 1, 'admin', 'admin@gmail.com', '253356356', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', '45.00', 'free', '0.00', NULL, '0.00', '45.00', 'Cash_On_Delivery', 'USD', NULL, 'English', 'pending', NULL, '2023-07-03 17:45:53', '2023-07-03 17:46:00'),
-(19, 1, 'admin', 'admin@gmail.com', '253356356', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', '45.00', 'free', '0.00', NULL, '0.00', '45.00', 'Cash_On_Delivery', 'USD', NULL, 'English', 'pending', NULL, '2023-07-31 18:53:01', '2023-07-31 18:53:07');
+(19, 1, 'admin', 'admin@gmail.com', '253356356', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', '45.00', 'free', '0.00', NULL, '0.00', '45.00', 'Cash_On_Delivery', 'USD', NULL, 'English', 'pending', NULL, '2023-07-31 18:53:01', '2023-07-31 18:53:07'),
+(20, 1, 'admin', 'admin@gmail.com', '253356356', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', 'admin', 'Manchester', 'Swains Island', '54754', 'AS', 'A 1 Cottage  Manchester r 393 fb area', '4.00', 'free', '0.00', NULL, '0.00', '4.00', 'Cash_On_Delivery', 'USD', NULL, 'English', 'pending', NULL, '2023-08-24 22:47:55', '2023-08-24 22:48:09');
 
 -- --------------------------------------------------------
 
@@ -687,7 +660,7 @@ CREATE TABLE `order_products` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `product_attributes` text DEFAULT NULL,
+  `product_attributes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `unit_price` decimal(10,2) UNSIGNED NOT NULL,
   `qty` int(11) NOT NULL,
   `line_total` decimal(10,2) UNSIGNED NOT NULL,
@@ -713,7 +686,8 @@ INSERT INTO `order_products` (`id`, `order_id`, `product_id`, `product_attribute
 (14, 16, 1, 'a:0:{}', '45.00', 1, '45.00', '2023-07-03 17:32:52', '2023-07-03 17:32:52'),
 (15, 17, 1, 'a:0:{}', '45.00', 1, '45.00', '2023-07-03 17:45:13', '2023-07-03 17:45:13'),
 (16, 18, 1, 'a:0:{}', '45.00', 1, '45.00', '2023-07-03 17:45:53', '2023-07-03 17:45:53'),
-(17, 19, 1, 'a:0:{}', '45.00', 1, '45.00', '2023-07-31 18:53:01', '2023-07-31 18:53:01');
+(17, 19, 1, 'a:0:{}', '45.00', 1, '45.00', '2023-07-31 18:53:01', '2023-07-31 18:53:01'),
+(18, 20, 7, 'a:0:{}', '4.00', 1, '4.00', '2023-08-24 22:47:55', '2023-08-24 22:47:55');
 
 -- --------------------------------------------------------
 
@@ -735,9 +709,9 @@ CREATE TABLE `order_taxes` (
 
 CREATE TABLE `pages` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `slug` varchar(191) NOT NULL,
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `template` varchar(191) DEFAULT NULL,
+  `template` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -766,9 +740,9 @@ INSERT INTO `pages` (`id`, `slug`, `status`, `template`, `created_at`, `updated_
 CREATE TABLE `page_translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `page_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `title` text NOT NULL,
-  `body` longtext DEFAULT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -795,8 +769,8 @@ INSERT INTO `page_translations` (`id`, `page_id`, `locale`, `title`, `body`, `cr
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(191) NOT NULL,
-  `token` varchar(191) NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -816,7 +790,7 @@ INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
 CREATE TABLE `permissions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `role_id` bigint(20) NOT NULL,
-  `permission` varchar(191) NOT NULL,
+  `permission` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -830,21 +804,23 @@ CREATE TABLE `permissions` (
 CREATE TABLE `products` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `brand_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `products_id` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tax_class_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `slug` varchar(191) NOT NULL,
-  `product_type` varchar(191) NOT NULL,
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(10,2) UNSIGNED NOT NULL,
   `special_price` decimal(10,2) UNSIGNED DEFAULT NULL,
   `special_price_start` date DEFAULT NULL,
   `special_price_end` date DEFAULT NULL,
-  `sku` varchar(191) DEFAULT NULL,
-  `manage_stock` tinyint(1) DEFAULT NULL,
+  `sku` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `manage_stock` tinyint(1) NOT NULL,
   `qty` bigint(20) DEFAULT NULL,
   `in_stock` tinyint(1) NOT NULL,
   `viewed` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) DEFAULT NULL,
-  `featured_tag` varchar(30) DEFAULT NULL,
-  `digital_file` text DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `featured_tag` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `digital_file` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_gift` int(11) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -853,14 +829,13 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `brand_id`, `tax_class_id`, `slug`, `product_type`, `price`, `special_price`, `special_price_start`, `special_price_end`, `sku`, `manage_stock`, `qty`, `in_stock`, `viewed`, `is_active`, `featured_tag`, `digital_file`, `created_at`, `updated_at`) VALUES
-(1, NULL, NULL, 'product-name', 'simple_product', '45.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 62, 1, NULL, '', '2023-05-23 23:55:04', '2023-08-16 21:38:58'),
-(2, NULL, NULL, 'product-name2', 'simple_product', '45.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 8, 1, NULL, '', '2023-05-23 23:55:48', '2023-06-27 20:57:13'),
-(3, NULL, NULL, 'product-name3', 'simple_product', '45.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 1, NULL, '', '2023-05-23 23:56:21', '2023-05-23 23:56:21'),
-(13, NULL, NULL, 'name', 'simple_product', '90.00', NULL, NULL, NULL, '545', 1, 67, 1, 5, 1, NULL, NULL, '2023-08-16 21:27:31', '2023-08-16 21:42:04'),
-(14, NULL, NULL, 'name100', 'simple_product', '90.00', NULL, NULL, NULL, '545', 1, 67, 1, 3, 1, NULL, NULL, '2023-08-16 22:15:51', '2023-08-16 22:18:39'),
-(15, NULL, NULL, 'name1000', 'simple_product', '91.00', NULL, NULL, NULL, '546', 1, 68, 1, 2, 1, NULL, NULL, '2023-08-16 22:25:44', '2023-08-16 22:26:45'),
-(16, 1, NULL, 'name4', 'simple_product', '45.00', '3.00', NULL, NULL, NULL, 0, NULL, 1, 1, 1, NULL, '', '2023-08-17 23:36:30', '2023-08-17 23:37:10');
+INSERT INTO `products` (`id`, `brand_id`, `products_id`, `tax_class_id`, `slug`, `product_type`, `price`, `special_price`, `special_price_start`, `special_price_end`, `sku`, `manage_stock`, `qty`, `in_stock`, `viewed`, `is_active`, `featured_tag`, `digital_file`, `is_gift`, `created_at`, `updated_at`) VALUES
+(1, NULL, NULL, NULL, 'product-name', 'simple_product', '23.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 64, 1, NULL, '', 0, '2023-05-23 23:55:04', '2023-08-28 13:00:01'),
+(2, NULL, NULL, NULL, 'product-name2', 'simple_product', '25.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 8, 1, NULL, '', 0, '2023-05-23 23:55:48', '2023-06-27 20:57:13'),
+(3, NULL, NULL, NULL, 'product-name3', 'simple_product', '25.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 1, NULL, '', 1, '2023-05-23 23:56:21', '2023-05-23 23:56:21'),
+(4, NULL, NULL, NULL, 'product-name4', 'simple_product', '5.00', NULL, NULL, NULL, NULL, 0, NULL, 1, 1, 1, NULL, '', 1, '2023-05-23 23:56:58', '2023-08-24 21:35:35'),
+(7, NULL, '[\"1\",\"3\"]', NULL, 'name', 'simple_product', '5.00', '4.00', NULL, NULL, NULL, 0, NULL, 1, 23, 1, NULL, '', 1, '2023-08-24 19:10:26', '2023-08-25 18:26:07'),
+(8, NULL, '[\"1\",\"2\",\"3\",\"4\",\"7\"]', NULL, 'mother-day', 'simple_product', '56.00', '4.00', NULL, NULL, NULL, 0, NULL, 1, 37, 1, NULL, '', 1, '2023-08-25 16:59:30', '2023-08-25 19:38:33');
 
 -- --------------------------------------------------------
 
@@ -881,10 +856,10 @@ INSERT INTO `product_categories` (`product_id`, `category_id`) VALUES
 (1, 35),
 (2, 34),
 (3, 32),
-(13, 33),
-(14, 33),
-(15, 32),
-(16, 33);
+(4, 33),
+(7, 32),
+(7, 35),
+(8, 34);
 
 -- --------------------------------------------------------
 
@@ -897,7 +872,7 @@ CREATE TABLE `product_comments` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `body` text NOT NULL,
+  `body` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -913,7 +888,7 @@ CREATE TABLE `product_reviews` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `rating` bigint(20) NOT NULL,
-  `comment` text NOT NULL,
+  `comment` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_approved` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -946,10 +921,10 @@ CREATE TABLE `product_tags` (
 CREATE TABLE `product_translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` text NOT NULL,
-  `description` longtext NOT NULL,
-  `short_description` text DEFAULT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `short_description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -962,10 +937,9 @@ INSERT INTO `product_translations` (`id`, `product_id`, `locale`, `name`, `descr
 (1, 1, 'English', 'Product Name', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '2023-05-23 23:55:04', '2023-05-23 23:55:04'),
 (2, 2, 'English', 'Product Name', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '2023-05-23 23:55:48', '2023-05-23 23:55:48'),
 (3, 3, 'English', 'product name', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '2023-05-23 23:56:21', '2023-05-23 23:56:21'),
-(8, 13, 'English', 'name', '<p>this is description</p>', 'this is short description', '2023-05-23 23:56:21', '2023-08-16 21:41:52'),
-(9, 14, 'English', 'name100', 'this is description', 'this is short description', '2023-05-23 23:56:21', NULL),
-(10, 15, 'English', 'name1000', 'this is description', 'this is short description', '2023-05-23 23:56:21', NULL),
-(11, 16, 'English', 'name', '<p>demo</p>', 'demo', '2023-08-17 23:36:30', '2023-08-17 23:36:30');
+(4, 4, 'English', 'Product name', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '2023-05-23 23:56:58', '2023-05-23 23:56:58'),
+(7, 7, 'English', 'Name', '<p>Description&nbsp;</p>', 'Description ', '2023-08-24 19:10:26', '2023-08-24 19:10:26'),
+(8, 8, 'English', 'Mother Day', '<p>Description&nbsp;</p>', 'Description', '2023-08-25 16:59:30', '2023-08-25 16:59:30');
 
 -- --------------------------------------------------------
 
@@ -976,7 +950,7 @@ INSERT INTO `product_translations` (`id`, `product_id`, `locale`, `name`, `descr
 CREATE TABLE `product_variations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -988,7 +962,7 @@ CREATE TABLE `product_variations` (
 CREATE TABLE `product_variation_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `variation_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1000,7 +974,7 @@ CREATE TABLE `product_variation_items` (
 CREATE TABLE `product_variation_prices` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `option` text NOT NULL,
+  `option` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `special_price` decimal(10,2) UNSIGNED DEFAULT NULL,
   `is_available` tinyint(1) NOT NULL
@@ -1014,8 +988,8 @@ CREATE TABLE `product_variation_prices` (
 
 CREATE TABLE `roles` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `description` text DEFAULT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1028,8 +1002,8 @@ CREATE TABLE `roles` (
 
 CREATE TABLE `settings` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `value` longtext NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1101,8 +1075,8 @@ INSERT INTO `settings` (`id`, `name`, `value`, `created_at`, `updated_at`) VALUE
 CREATE TABLE `setting_translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `setting_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `value` longtext NOT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1115,7 +1089,7 @@ CREATE TABLE `setting_translations` (
 
 CREATE TABLE `tags` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `slug` varchar(191) NOT NULL,
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1129,8 +1103,8 @@ CREATE TABLE `tags` (
 CREATE TABLE `tags_translation` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `tag_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1143,7 +1117,7 @@ CREATE TABLE `tags_translation` (
 
 CREATE TABLE `tax_classes` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `based_on` varchar(30) NOT NULL,
+  `based_on` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1157,8 +1131,8 @@ CREATE TABLE `tax_classes` (
 CREATE TABLE `tax_classes_translation` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `tax_class_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1172,8 +1146,8 @@ CREATE TABLE `tax_classes_translation` (
 CREATE TABLE `tax_rates` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `tax_class_id` bigint(20) UNSIGNED NOT NULL,
-  `country` varchar(191) NOT NULL,
-  `state` varchar(191) NOT NULL,
+  `country` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `state` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `rate` decimal(8,4) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1188,8 +1162,8 @@ CREATE TABLE `tax_rates` (
 CREATE TABLE `tax_rates_translation` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `tax_rate_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
+  `locale` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1203,10 +1177,10 @@ CREATE TABLE `tax_rates_translation` (
 CREATE TABLE `transactions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
-  `transaction_id` varchar(191) NOT NULL,
-  `payment_method` varchar(30) NOT NULL,
+  `transaction_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payment_method` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `payment_data` text DEFAULT NULL,
+  `payment_data` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1219,18 +1193,18 @@ CREATE TABLE `transactions` (
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `email` varchar(191) NOT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `user_type` varchar(20) NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `role_id` bigint(20) DEFAULT NULL,
   `status` int(11) NOT NULL,
-  `profile_picture` varchar(191) DEFAULT NULL,
+  `profile_picture` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) DEFAULT NULL,
-  `provider` varchar(191) DEFAULT NULL,
-  `provider_id` varchar(191) DEFAULT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `provider` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `provider_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1614,13 +1588,13 @@ ALTER TABLE `wish_lists`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `brands_translation`
 --
 ALTER TABLE `brands_translation`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -1632,7 +1606,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `category_translation`
 --
 ALTER TABLE `category_translation`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `coupons`
@@ -1674,7 +1648,7 @@ ALTER TABLE `email_templates`
 -- AUTO_INCREMENT for table `entity_files`
 --
 ALTER TABLE `entity_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1686,19 +1660,19 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `meta_data`
 --
 ALTER TABLE `meta_data`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `meta_data_translations`
 --
 ALTER TABLE `meta_data_translations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -1728,13 +1702,13 @@ ALTER TABLE `navigation_item_translations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `order_products`
 --
 ALTER TABLE `order_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `pages`
@@ -1758,7 +1732,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `product_comments`
@@ -1776,7 +1750,7 @@ ALTER TABLE `product_reviews`
 -- AUTO_INCREMENT for table `product_translations`
 --
 ALTER TABLE `product_translations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `product_variations`
