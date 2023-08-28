@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Hobo Std';
+    src: url('HoboStd.eot');
+    src: url('HoboStd.eot?#iefix') format('embedded-opentype'),
+        url('HoboStd.woff2') format('woff2'),
+        url('HoboStd.woff') format('woff'),
+        url('HoboStd.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Ricksons';
+    src: url('Ricksons.eot');
+    src: url('Ricksons.eot?#iefix') format('embedded-opentype'),
+        url('Ricksons.woff2') format('woff2'),
+        url('Ricksons.woff') format('woff'),
+        url('Ricksons.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
